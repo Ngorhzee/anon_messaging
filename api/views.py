@@ -13,7 +13,7 @@ api = Api()
 
 
 
-@api.endpoint("createroom", method="POST")
+@api.endpoint("create-room", method="POST")
 def createRoom(request: Request):
     body = typing.cast(dict, request.data)
     name = body.get("name")
@@ -25,7 +25,7 @@ class ValidateMessageInput(pydantic.BaseModel):
     content: str
     device_id: UUID
 
-@api.endpoint("getmessages/<code>", method="GET")
+@api.endpoint("get-messages/<code>", method="GET")
 def getmessages(request: Request, code: str):
     try:
         UUID(code)
@@ -42,7 +42,7 @@ def getmessages(request: Request, code: str):
     return Response(sr)
     
 
-@api.endpoint("postmessages/<code>", method="POST")
+@api.endpoint("post-messages/<code>", method="POST")
 @body_tools.validate(ValidateMessageInput)
 def postmessages(request: Request, code: str):
     data: ValidateMessageInput = body_tools.get_validated_body(request)
