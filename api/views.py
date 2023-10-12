@@ -24,6 +24,7 @@ def createRoom(request: Request):
 class ValidateMessageInput(pydantic.BaseModel):
     content: str
     device_id: UUID
+    chatroom_id: UUID
 
 @api.endpoint("get-messages/<code>", method="GET")
 def getmessages(request: Request, code: str):
@@ -42,16 +43,13 @@ def getmessages(request: Request, code: str):
     return Response(sr)
     
 
-@api.endpoint("post-messages/<code>", method="POST")
+@api.endpoint("post-messages", method="POST")
 @body_tools.validate(ValidateMessageInput)
-def postmessages(request: Request, code: str):
+def postmessages(request: Request,):
     data: ValidateMessageInput = body_tools.get_validated_body(request)
+   
     try:
-        UUID(code)
-    except ValueError:
-        raise ApiException("Invalid Chatroom code")
-    try:
-        room = ChatRoom.objects.get(id=code)
+        room = ChatRoom.objects.get(id=data.chatroom_id)
     
     except ChatRoom.DoesNotExist:
         raise ResourceNotFound("Chatroom does not exist")
