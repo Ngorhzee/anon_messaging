@@ -6,6 +6,7 @@ from shared.view_tools.exceptions import ApiException, ResourceNotFound
 from .sr import MessageSerializer, RoomSerialiser
 from shared.view_tools import body_tools
 from uuid import UUID
+import typing
 import pydantic
 
 api = Api()
@@ -14,7 +15,9 @@ api = Api()
 
 @api.endpoint("createroom", method="POST")
 def createRoom(request: Request):
-    room = ChatRoom.objects.create()
+    body = typing.cast(dict, request.data)
+    name = body.get("name")
+    room = ChatRoom.objects.create(name=name)
     sr = RoomSerialiser(room,request)
     return Response(sr())
 
