@@ -22,10 +22,25 @@ def createRoom(request: Request):
     sr = RoomSerialiser(room,request)
     return Response(sr())
 
+@api.endpoint("get-room/<id>", method="GET")
+def getRoom(request: Request, id: str):
+    try:
+        UUID(id)
+    except ValueError:
+        raise ApiException("Invalid Chatroom id")
+    try:
+        room = ChatRoom.objects.get(id=id)
+    except ChatRoom.DoesNotExist:
+        raise ResourceNotFound("Chat room does not exist") 
+
+    sr = RoomSerialiser(room, request)
+    return Response(sr())
+
 class ValidateMessageInput(pydantic.BaseModel):
     content: str
     device_id: UUID
     chatroom_id: UUID
+
 
 @api.endpoint("get-messages/<code>", method="GET")
 def getmessages(request: Request, code: str):
