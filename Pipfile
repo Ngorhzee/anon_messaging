@@ -6,8 +6,10 @@ name = "pypi"
 [packages]
 django = "*"
 djangorestframework = "*"
+pydantic = "*"
 
 [dev-packages]
+black = "*"
 
 [requires]
 python_version = "3.11"
